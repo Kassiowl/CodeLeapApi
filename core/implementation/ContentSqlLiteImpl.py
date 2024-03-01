@@ -51,6 +51,21 @@ class ContentSqlLiteImpl(ContentInterface):
         except:
             return False
 
+    def get_all_contents(self):
+        try:
+            self.cursor.execute('SELECT * FROM code_leap_api_contentmodel')
+            rows = self.cursor.fetchall()
+
+            contents = []
+            for row in rows:
+                content = Content(row[1], row[2], row[3], row[4])
+                contents.append(content)
+
+            return contents
+        except Exception as e:
+            print(f"Error retrieving contents: {e}")
+            return None
+        
     def get_content(self, content_id):
         try:
             self.cursor.execute('''

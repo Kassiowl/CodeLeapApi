@@ -3,6 +3,7 @@ import datetime
 import json
 
 from django.http import HttpResponse, JsonResponse, QueryDict
+from core.use_cases.content.get_all_contents_use_case import GetAllContentsUseCase
 from core.use_cases.content.get_content_use_case import GetContentUseCase
 from core.use_cases.content.delete_content_use_case import DeleteContentUseCase
 from core.use_cases.content.edit_content_use_case import EditContentUseCase
@@ -18,6 +19,14 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 @api_view(['GET'])
+def get_all_contents(request):
+   content_implementation = ContentSqlLiteImpl()
+   get_all_content_use_case = GetAllContentsUseCase(content_implementation)
+   content_list = get_all_content_use_case.run()
+   content_dict_list = [dataclasses.asdict(content) for content in content_list]
+   return JsonResponse({"data":content_dict_list}, status=200, json_dumps_params={'separators': (',', ':')})
+
+@api_view(['GET'])
 def get_content(request):
     if request.method != 'GET':
         return JsonResponse({'error': 'BAD REQUEST'}, status=400)
@@ -26,12 +35,13 @@ def get_content(request):
     content_implementation = ContentSqlLiteImpl()
     get_content_use_case = GetContentUseCase(content_implementation)
     content = get_content_use_case.run(content_id)
-    content_dict = dataclasses.asdict(content)
-
     if(content is None):
         return JsonResponse({'error': 'NOT FOUND'}, status=404)
+    content_dict = dataclasses.asdict(content)
+
     
     return JsonResponse({"data":content_dict}, status=200, json_dumps_params={'separators': (',', ':')})
+
 
 
 @csrf_exempt

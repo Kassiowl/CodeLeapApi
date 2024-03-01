@@ -32,7 +32,7 @@ class ContentToServerImpl(ContentInterface):
         except:
             return False
 
-    def get_content(self, content_id):
+    def get_contents(self, content_id):
         try:
             url = f'https://dev.codeleap.co.uk/careers/'
             print(requests.get(url))
