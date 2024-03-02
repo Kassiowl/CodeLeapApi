@@ -2,6 +2,9 @@ from core.entities.content import Content
 from core.interfaces.ContentInterface import ContentInterface
 import requests
 
+
+# I didn't test this code and i don't know actually if it's working, but it's just
+# a demonstration of the dependency inversion power.
 class ContentToServerImpl(ContentInterface):
     def send_content(content: Content):
         try:
@@ -39,4 +42,7 @@ class ContentToServerImpl(ContentInterface):
             return True
         except:
             return False
+        
+    def get_all_contents() -> list[Content]:
+        pass
 
